@@ -8,16 +8,34 @@
 		<script type="module" src="space.js"></script>
 	</head>
 	<body>
-		<h1>Antithesis Bug Obliterator</h1>
-		<div class="scoreboard">
-			<!-- <div id="lives-box">
-				<img src="./assets/lives.png" alt="Lives" /><img
-					src="./assets/lives.png"
-					alt="Lives"
-				/><img src="./assets/lives.png" alt="Lives" />
-			</div> -->
-			<div id="score-box">00000</div>
+		<div id="start-screen">
+			<h1>Antithesis</h1>
+			<p class="subtitle">Find the bugs before it hurts you!</p>
+			<div class="controls">
+				<p><span>ARROW KEYS</span> MOVE</p>
+				<p><span>SPACE BAR</span> SHOOT</p>
+			</div>
+			<button id="start-btn">PRESS START</button>
 		</div>
-		<canvas id="board"></canvas>
+		<div id="restart-screen" class="hidden">
+			<h1>Antithesis</h1>
+			<p class="subtitle">Game Over</p>
+			<p class="good-news">But good news - we found the bug!</p>
+			<p class="final-score">Score: <span id="final-score">00000</span></p>
+			<button id="restart-btn">TRY AGAIN</button>
+		</div>
+		<div id="game-container" class="hidden">
+			<h1>Antithesis Bug Obliterator</h1>
+			<div class="scoreboard">
+				<!-- <div id="lives-box">
+					<img src="./assets/lives.png" alt="Lives" /><img
+						src="./assets/lives.png"
+						alt="Lives"
+					/><img src="./assets/lives.png" alt="Lives" />
+				</div> -->
+				<div id="score-box">00000</div>
+			</div>
+			<canvas id="board"></canvas>
+		</div>
 	</body>
 </html>

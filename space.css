@@ -6,15 +6,58 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	margin: 0;
+	padding: 20px;
+	min-height: 100vh;
+	background: linear-gradient(180deg, #0a0015 0%, #1a0a2e 50%, #0d0d2b 100%);
+	background-attachment: fixed;
+}
+
+/* Scanline overlay effect */
+body::before {
+	content: '';
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: repeating-linear-gradient(
+		0deg,
+		rgba(0, 0, 0, 0.1) 0px,
+		rgba(0, 0, 0, 0.1) 1px,
+		transparent 1px,
+		transparent 2px
+	);
+	pointer-events: none;
+	z-index: 1000;
+}
+
+h1 {
+	font-size: clamp(1rem, 4vw, 2rem);
+	color: #ff00ff;
+	text-shadow:
+		0 0 5px #ff00ff,
+		0 0 10px #ff00ff,
+		0 0 20px #ff00ff,
+		0 0 40px #c717c7,
+		0 0 80px #c717c7;
+	margin: 20px 0 30px 0;
+	letter-spacing: 4px;
 }
 
 #board {
 	background-image: url('../assets/universe-background.png');
 	background-color: black;
-	background-size: cover; /* <------ */
+	background-size: cover;
 	background-repeat: no-repeat;
-	background-position: center center; /* optional, center the image */
+	background-position: center center;
 	max-width: 1024px;
+	border: 4px solid #6b3fa0;
+	box-shadow:
+		0 0 10px #6b3fa0,
+		0 0 20px #4a2c7a,
+		inset 0 0 60px rgba(107, 63, 160, 0.3);
+	border-radius: 4px;
 }
 
 .scoreboard {
@@ -58,4 +101,201 @@ body {
 	width: 40px;
 	height: 40px;
 	margin: 0 5px;
+}
+
+/* Start Screen */
+#start-screen {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 60px 40px;
+	background: rgba(26, 10, 46, 0.95);
+	border: 4px solid #6b3fa0;
+	box-shadow:
+		0 0 20px #6b3fa0,
+		0 0 40px #4a2c7a,
+		inset 0 0 60px rgba(107, 63, 160, 0.3);
+	border-radius: 8px;
+	margin-top: 50px;
+}
+
+#start-screen h1 {
+	font-size: clamp(1.5rem, 5vw, 3rem);
+	margin-bottom: 10px;
+}
+
+#start-screen .subtitle {
+	font-size: clamp(0.6rem, 2vw, 1rem);
+	color: #c77dff;
+	margin: 20px 0 40px 0;
+	letter-spacing: 3px;
+}
+
+#start-btn {
+	font-family: 'Press Start 2P', monospace;
+	font-size: clamp(0.8rem, 2vw, 1.2rem);
+	color: #00ff00;
+	background: transparent;
+	border: 3px solid #00ff00;
+	padding: 15px 40px;
+	cursor: pointer;
+	text-shadow:
+		0 0 5px #00ff00,
+		0 0 10px #00ff00;
+	box-shadow:
+		0 0 10px #00ff00,
+		inset 0 0 10px rgba(0, 255, 0, 0.1);
+	transition: all 0.2s ease;
+	animation: pulse 1.5s infinite;
+	margin-top: 40px;
+}
+
+#start-btn:hover {
+	background: rgba(0, 255, 0, 0.1);
+	box-shadow:
+		0 0 20px #00ff00,
+		0 0 40px #00ff00,
+		inset 0 0 20px rgba(0, 255, 0, 0.2);
+	transform: scale(1.05);
+}
+
+@keyframes pulse {
+	0%,
+	100% {
+		box-shadow:
+			0 0 10px #00ff00,
+			inset 0 0 10px rgba(0, 255, 0, 0.1);
+	}
+	50% {
+		box-shadow:
+			0 0 20px #00ff00,
+			0 0 30px #00ff00,
+			inset 0 0 15px rgba(0, 255, 0, 0.2);
+	}
+}
+
+.controls {
+	margin-top: 5px;
+	color: #c77dff;
+	font-size: clamp(0.8rem, 2vw, 1rem);
+	line-height: 2.5;
+	text-shadow:
+		0 0 5px #c77dff,
+		0 0 10px #6b3fa0;
+}
+
+.controls p {
+	margin: 8px 0;
+}
+
+.controls span {
+	color: #00ff00;
+	text-shadow:
+		0 0 5px #00ff00,
+		0 0 10px #00ff00;
+}
+
+/* Game container visibility */
+#game-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#game-container.hidden {
+	display: none;
+}
+
+#start-screen.hidden {
+	display: none;
+}
+
+/* Restart/Game Over Screen */
+#restart-screen {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 60px 40px;
+	background: rgba(26, 10, 46, 0.95);
+	border: 4px solid #6b3fa0;
+	box-shadow:
+		0 0 20px #6b3fa0,
+		0 0 40px #4a2c7a,
+		inset 0 0 60px rgba(107, 63, 160, 0.3);
+	border-radius: 8px;
+	margin-top: 50px;
+}
+
+#restart-screen h1 {
+	font-size: clamp(1.5rem, 5vw, 3rem);
+	color: #ff00ff;
+	text-shadow:
+		0 0 5px #ff00ff,
+		0 0 10px #ff00ff,
+		0 0 20px #ff00ff,
+		0 0 40px #c717c7;
+	margin-bottom: 10px;
+}
+
+#restart-screen .subtitle {
+	font-size: clamp(1rem, 3vw, 1.5rem);
+	color: #ff3333;
+	text-shadow:
+		0 0 5px #ff3333,
+		0 0 10px #ff3333;
+	margin: 0 0 20px 0;
+	letter-spacing: 2px;
+}
+
+#restart-screen .good-news {
+	font-size: clamp(0.6rem, 1.8vw, 1rem);
+	color: #00ff00;
+	text-shadow:
+		0 0 5px #00ff00,
+		0 0 10px #00ff00;
+	margin: 0 0 30px 0;
+	letter-spacing: 1px;
+}
+
+#restart-screen .final-score {
+	font-size: clamp(1rem, 3vw, 1.5rem);
+	color: #ffff00;
+	text-shadow:
+		0 0 5px #ffff00,
+		0 0 10px #ffff00;
+	margin: 0 0 30px 0;
+	letter-spacing: 3px;
+}
+
+#restart-btn {
+	font-family: 'Press Start 2P', monospace;
+	font-size: clamp(0.8rem, 2vw, 1.2rem);
+	color: #00ff00;
+	background: transparent;
+	border: 3px solid #00ff00;
+	padding: 15px 40px;
+	cursor: pointer;
+	text-shadow:
+		0 0 5px #00ff00,
+		0 0 10px #00ff00;
+	box-shadow:
+		0 0 10px #00ff00,
+		inset 0 0 10px rgba(0, 255, 0, 0.1);
+	transition: all 0.2s ease;
+	animation: pulse 1.5s infinite;
+}
+
+#restart-btn:hover {
+	background: rgba(0, 255, 0, 0.1);
+	box-shadow:
+		0 0 20px #00ff00,
+		0 0 40px #00ff00,
+		inset 0 0 20px rgba(0, 255, 0, 0.2);
+	transform: scale(1.05);
+}
+
+#restart-screen.hidden {
+	display: none;
 }

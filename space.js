@@ -6,43 +6,34 @@ import {
 	drawAliensToCanvas,
 	drawBulletsToCanvas,
 } from './game/renderer/draw-elements.js';
-import { gameState } from './game/gameState.js';
+import { gameState, resetGameState } from './game/gameState.js';
 
 window.onload = function () {
-	gameState.board = generateBoard(this.document);
-	gameState.ctx = gameState.board.getContext('2d');
-
-	//draw inital ship
-	gameState.ctx.fillStyle = gameState.ship.color;
-	gameState.ctx.fillRect(
-		gameState.ship.x,
-		gameState.ship.y,
-		gameState.ship.width,
-		gameState.ship.height,
-	);
-
-	//load images
+	// Preload all images while on start screen
 	gameState.shipImg = new Image();
 	gameState.shipImg.src = './assets/ship-asset.png';
-	gameState.shipImg.onload = function () {
-		gameState.ctx.drawImage(
-			gameState.shipImg,
-			gameState.ship.x,
-			gameState.ship.y,
-			gameState.ship.width,
-			gameState.ship.height,
-		);
-	};
 
-	//load bullet image
 	gameState.bulletImg = new Image();
 	gameState.bulletImg.src = './assets/hero/ship-bullet.png';
 
-	//load alien images
 	gameState.alienImg = new Image();
 	gameState.alienImg.src = './assets/alien-bug-one.png';
 
-	//create initial aliens
+	// Set up start button handler
+	document.getElementById('start-btn').addEventListener('click', startGame);
+	document.getElementById('restart-btn').addEventListener('click', restartGame);
+};
+
+function startGame() {
+	// Hide start screen, show game
+	document.getElementById('start-screen').classList.add('hidden');
+	document.getElementById('game-container').classList.remove('hidden');
+
+	// Initialize the game board
+	gameState.board = generateBoard(document);
+	gameState.ctx = gameState.board.getContext('2d');
+
+	// Create initial aliens
 	const aliens = createAliens(
 		gameState.alienColumns,
 		gameState.alienRows,
@@ -51,17 +42,19 @@ window.onload = function () {
 	gameState.alienArray = aliens.alienArray;
 	gameState.alienCount = aliens.alienCount;
 
-	//event listener for user input
+	// Event listeners for user input
 	document.addEventListener('keydown', handleMoveShip);
 	document.addEventListener('keyup', handleShootBullet);
 
+	// Start the game loop
 	requestAnimationFrame(update);
-};
+}
 
 function update() {
 	requestAnimationFrame(update);
 
 	if (gameState.gameOver) {
+		showGameOver();
 		return;
 	}
 
@@ -140,3 +133,34 @@ const handleShootBullet = (e) => {
 		gameState.gameOver,
 	);
 };
+
+function showGameOver() {
+	document.getElementById('game-container').classList.add('hidden');
+	document.getElementById('restart-screen').classList.remove('hidden');
+	document.getElementById('final-score').innerText = gameState.score;
+}
+
+function restartGame() {
+	// Hide restart screen, show game
+	document.getElementById('restart-screen').classList.add('hidden');
+	document.getElementById('game-container').classList.remove('hidden');
+
+	// Reset game state
+	resetGameState();
+
+	// Reinitialize
+	gameState.board = document.getElementById('board');
+	gameState.ctx = gameState.board.getContext('2d');
+
+	// Create initial aliens
+	const aliens = createAliens(
+		gameState.alienColumns,
+		gameState.alienRows,
+		gameState.alienImg,
+	);
+	gameState.alienArray = aliens.alienArray;
+	gameState.alienCount = aliens.alienCount;
+
+	// Reset score display
+	document.getElementById('score-box').innerText = 'Score: 0';
+}
