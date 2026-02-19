@@ -1,19 +1,25 @@
+import {
+	INIT_BOARD_VALUES,
+	INIT_ALIEN_VALUES,
+	INIT_BULLET_VALUES,
+} from './game/constants.js';
+import { shoot, moveShip } from './game/actions/hero.js';
 // Board
 
-let tileSize = 64;
-let row = 16;
-let col = 16;
-
 let board;
-let boardWidth = tileSize * col;
-let boardHeight = tileSize * row;
+let boardWidth = INIT_BOARD_VALUES.tileSize * INIT_BOARD_VALUES.col;
+let boardHeight = INIT_BOARD_VALUES.tileSize * INIT_BOARD_VALUES.row;
 
 //ship
 
-let shipWidth = tileSize * 3;
-let shipHeight = tileSize * 2;
-let shipX = (tileSize * col) / 2 - tileSize;
-let shipY = tileSize * row - tileSize * 2;
+let shipWidth = INIT_BOARD_VALUES.tileSize * 3;
+let shipHeight = INIT_BOARD_VALUES.tileSize * 2;
+let shipX =
+	(INIT_BOARD_VALUES.tileSize * INIT_BOARD_VALUES.col) / 2 -
+	INIT_BOARD_VALUES.tileSize;
+let shipY =
+	INIT_BOARD_VALUES.tileSize * INIT_BOARD_VALUES.row -
+	INIT_BOARD_VALUES.tileSize * 2;
 let ship = {
 	x: shipX,
 	y: shipY,
@@ -24,28 +30,27 @@ let ship = {
 
 // aliens
 let alienArray = [];
-let alienWidth = tileSize * 2;
-let alienHeigth = tileSize;
-let alienX = tileSize;
-let alienY = tileSize;
+let alienWidth = INIT_ALIEN_VALUES.width;
+let alienHeigth = INIT_ALIEN_VALUES.height;
+let alienX = INIT_ALIEN_VALUES.x;
+let alienY = INIT_ALIEN_VALUES.y;
 let alienImg;
-
-let alienRows = 2;
-let alienColumns = 3;
+let alienRows = INIT_ALIEN_VALUES.rows;
+let alienColumns = INIT_ALIEN_VALUES.columns;
 let alienCount = 0; //number of aliens to defeat
 let alienVelocityX = 1;
 
 //bullets
 let bulletImg;
 let bulletArray = [];
-let bulletVelcityY = -10;
-
+let bulletVelcityY = INIT_BULLET_VALUES.velocityY;
 let score = 0;
 let gameOver = false;
 
 //ship
 let shipImg;
-let shipVelocityX = tileSize;
+let shipVelocityX = INIT_BOARD_VALUES.tileSize;
+let ctx;
 
 window.onload = function () {
 	board = this.document.getElementById('board');
@@ -74,10 +79,11 @@ window.onload = function () {
 
 	createAliens(); //create initial aliens
 
-	document.addEventListener('keydown', moveShip);
-	document.addEventListener('keyup', shoot);
+	document.addEventListener('keydown', handleMoveShip);
+	document.addEventListener('keyup', handleShootBullet);
+
+	requestAnimationFrame(update);
 };
-requestAnimationFrame(update);
 
 function update() {
 	requestAnimationFrame(update);
@@ -142,8 +148,8 @@ function update() {
 
 	if (alienCount === 0) {
 		//increase the number of alien in teh column and rows by 1
-		alienColumns = Math.min(alienColumns + 1, col / 2 - 1); //cap at 16/2 - 2 = 6
-		alienRows = Math.min(alienRows + 1, row - 4); //cap at 16-4 = 12
+		alienColumns = Math.min(alienColumns + 1, BOARD.col / 2 - 1); //cap at 16/2 - 2 = 6
+		alienRows = Math.min(alienRows + 1, BOARD.row - 4); //cap at 16-4 = 12
 		alienVelocityX += 0.5; //increase alien speed
 		//reset the alien array and create new aliens
 		alienArray = [];
@@ -158,16 +164,13 @@ function update() {
 	console.log('bullet count', bulletArray.length);
 }
 
-function moveShip(e) {
-	if (gameOver) {
-		return;
-	}
-	if (e.code === 'ArrowLeft' && ship.x > 0) {
-		ship.x -= shipVelocityX;
-	} else if (e.code === 'ArrowRight' && ship.x < boardWidth - ship.width) {
-		ship.x += shipVelocityX;
-	}
-}
+const handleMoveShip = (e) => {
+	moveShip(e, ship, boardWidth, gameOver, shipVelocityX);
+};
+
+const handleShootBullet = (e) => {
+	shoot(e, ship, INIT_BOARD_VALUES.tileSize, bulletArray, gameOver);
+};
 
 function createAliens() {
 	for (let c = 0; c < alienColumns; c++) {
@@ -184,33 +187,6 @@ function createAliens() {
 		}
 	}
 	alienCount = alienArray.length;
-}
-
-function shoot(e) {
-	console.log('shooting');
-	if (gameOver) {
-		return;
-	}
-	if (e.code === 'Space') {
-		let leftBullet = {
-			x: ship.x + 26.5,
-			y: ship.y,
-			width: tileSize,
-			height: tileSize,
-			color: 'yellow',
-			used: false,
-		};
-		let rightBullet = {
-			x: ship.x + tileSize + 40,
-			y: ship.y,
-			width: tileSize,
-			height: tileSize,
-			color: 'yellow',
-			used: false,
-		};
-		bulletArray.push(leftBullet);
-		bulletArray.push(rightBullet);
-	}
 }
 
 function detectCollision(a, b) {
