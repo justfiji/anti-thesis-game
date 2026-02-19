@@ -1,7 +1,7 @@
 import { INIT_BOARD_VALUES } from './game/constants.js';
 import { shoot, moveShip } from './game/actions/hero.js';
 import { clearBullets, detectCollision, generateBoard } from './game/utils.js';
-import { createAliens, spawnNextWave } from './game/aliens.js';
+import { createAliens, spawnNextWave } from './game/generator/aliens.js';
 import {
 	drawAliensToCanvas,
 	drawBulletsToCanvas,
