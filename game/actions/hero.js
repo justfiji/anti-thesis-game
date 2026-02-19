@@ -17,7 +17,7 @@ export const shoot = (e, ship, tileSize, bulletArray, gameOver) => {
 		// Create left bullet - positioned on left side of ship
 		// x: ship.x + 26.5 offsets bullet to align with left gun
 		let leftBullet = {
-			x: ship.x + 26.5,
+			x: ship.x + 20.5,
 			y: ship.y, // Starts at ship's top edge
 			width: tileSize,
 			height: tileSize,
@@ -28,7 +28,7 @@ export const shoot = (e, ship, tileSize, bulletArray, gameOver) => {
 		// Create right bullet - positioned on right side of ship
 		// x: ship.x + tileSize + 40 offsets bullet to align with right gun
 		let rightBullet = {
-			x: ship.x + tileSize + 40,
+			x: ship.x + tileSize + 30,
 			y: ship.y,
 			width: tileSize,
 			height: tileSize,

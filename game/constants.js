@@ -1,5 +1,5 @@
 export const INIT_BOARD_VALUES = {
-	tileSize: 64,
+	tileSize: 48,
 	row: 16,
 	col: 16,
 };
