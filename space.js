@@ -4,6 +4,7 @@ import {
 	INIT_BULLET_VALUES,
 } from './game/constants.js';
 import { shoot, moveShip } from './game/actions/hero.js';
+import { detectCollision } from './game/utils.js';
 // Board
 
 let board;
@@ -187,13 +188,4 @@ function createAliens() {
 		}
 	}
 	alienCount = alienArray.length;
-}
-
-function detectCollision(a, b) {
-	return (
-		a.x < b.x + b.width &&
-		a.x + a.width > b.x &&
-		a.y < b.y + b.height &&
-		a.y + a.height > b.y
-	);
 }
