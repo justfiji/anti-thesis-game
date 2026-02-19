@@ -46,7 +46,7 @@ h1 {
 }
 
 #board {
-	background-image: url('../assets/universe-background.png');
+	background-image: url('assets/universe-background.png');
 	background-color: black;
 	background-size: cover;
 	background-repeat: no-repeat;
