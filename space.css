@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+	font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
+	text-align: center;
+}
+
+#board {
+	background-image: url('../assets/universe-background.png');
+	background-color: black;
+	background-size: cover; /* <------ */
+	background-repeat: no-repeat;
+	background-position: center center; /* optional, center the image */
+}
