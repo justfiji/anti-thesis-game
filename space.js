@@ -4,7 +4,12 @@ import {
 	INIT_BULLET_VALUES,
 } from './game/constants.js';
 import { shoot, moveShip } from './game/actions/hero.js';
-import { detectCollision } from './game/utils.js';
+import { clearBullets, detectCollision, generateBoard } from './game/utils.js';
+import { createAliens, spawnNextWave } from './game/aliens.js';
+import {
+	drawAliensToCanvas,
+	drawBulletsToCanvas,
+} from './game/renderer/draw-elements.js';
 // Board
 
 let board;
@@ -31,7 +36,6 @@ let ship = {
 
 // aliens
 let alienArray = [];
-let alienWidth = INIT_ALIEN_VALUES.width;
 let alienHeigth = INIT_ALIEN_VALUES.height;
 let alienX = INIT_ALIEN_VALUES.x;
 let alienY = INIT_ALIEN_VALUES.y;
@@ -54,9 +58,8 @@ let shipVelocityX = INIT_BOARD_VALUES.tileSize;
 let ctx;
 
 window.onload = function () {
-	board = this.document.getElementById('board');
-	board.width = boardWidth;
-	board.height = boardHeight;
+	board = generateBoard(this.document);
+
 	ctx = board.getContext('2d');
 
 	//draw inital ship
@@ -78,8 +81,12 @@ window.onload = function () {
 	alienImg = new Image();
 	alienImg.src = './assets/alien-bug-one.png';
 
-	createAliens(); //create initial aliens
+	//create initial aliens
+	const aliens = createAliens(alienColumns, alienRows, alienImg);
+	alienArray = aliens.alienArray;
+	alienCount = aliens.alienCount;
 
+	//event listener for user input
 	document.addEventListener('keydown', handleMoveShip);
 	document.addEventListener('keyup', handleShootBullet);
 
@@ -97,72 +104,48 @@ function update() {
 	ctx.clearRect(0, 0, boardWidth, boardHeight);
 	ctx.drawImage(shipImg, ship.x, ship.y, ship.width, ship.height);
 
-	//draw aliens
-	alienArray.forEach((alien) => {
-		if (alien.alive) {
-			alien.x += alienVelocityX;
-
-			//if alien touch border reverse direction and move down
-			if (alien.x + alien.width > boardWidth || alien.x < 0) {
-				alienVelocityX *= -1;
-				alien.x += alienVelocityX * 2;
-
-				//move alien down one row
-				for (let j = 0; j < alienArray.length; j++) {
-					alienArray[j].y += alienHeigth;
-				}
-			}
-			ctx.drawImage(alien.img, alien.x, alien.y, alien.width, alien.height);
-
-			//if the alien passes the ship, game over
-			if (alien.y > ship.y) {
-				gameOver = true;
-			}
-		}
-	});
-
-	//draw the bullets
-	for (let i = 0; i < bulletArray.length; i++) {
-		let bullet = bulletArray[i];
-		bullet.y += bulletVelcityY;
-		ctx.drawImage(bulletImg, bullet.x, bullet.y, bullet.width, bullet.height);
-
-		//bullet collision
-		for (let j = 0; j < alienArray.length; j++) {
-			let alien = alienArray[j];
-			if (!bullet.used && alien.alive && detectCollision(alien, bullet)) {
-				bullet.used = true;
-				alien.alive = false;
-				alienCount--;
-				score += 100;
-			}
-		}
+	// Draw aliens and update their state
+	const alienState = drawAliensToCanvas(
+		ctx,
+		alienArray,
+		boardWidth,
+		ship.y,
+		alienVelocityX,
+	);
+	alienVelocityX = alienState.alienVelocityX;
+	if (alienState.gameOver) {
+		gameOver = true;
 	}
+
+	//draw bullets and handle collisions
+	const bulletState = drawBulletsToCanvas(
+		ctx,
+		bulletArray,
+		bulletImg,
+		bulletVelcityY,
+		alienArray,
+		detectCollision,
+	);
+	alienCount -= bulletState.aliensKilled;
+	score += bulletState.scoreEarned;
 
 	//clear bullets
-	while (
-		bulletArray.length > 0 &&
-		(bulletArray[0].used || bulletArray[0].y < 0)
-	) {
-		bulletArray.shift();
-	}
+	clearBullets(bulletArray);
 
 	if (alienCount === 0) {
-		//increase the number of alien in teh column and rows by 1
-		alienColumns = Math.min(alienColumns + 1, INIT_BOARD_VALUES.col / 2 - 1); //cap at 16/2 - 2 = 6
-		alienRows = Math.min(alienRows + 1, INIT_BOARD_VALUES.row - 4); //cap at 16-4 = 12
-		alienVelocityX += 0.5; //increase alien speed
-		//reset the alien array and create new aliens
-		alienArray = [];
-		bulletArray = []; // to clear the bullets after the
-		createAliens();
+		// Spawn next wave with increased difficulty
+		bulletArray = [];
+		const nextWave = spawnNextWave(alienColumns, alienRows, alienVelocityX, alienImg);
+		alienColumns = nextWave.alienColumns;
+		alienRows = nextWave.alienRows;
+		alienVelocityX = nextWave.alienVelocityX;
+		alienArray = nextWave.alienArray;
+		alienCount = nextWave.alienCount;
 	}
 
 	ctx.fillStyle = 'white';
 	ctx.font = '20px Arial';
 	ctx.fillText('Score: ' + score, 10, 30);
-
-	console.log('bullet count', bulletArray.length);
 }
 
 const handleMoveShip = (e) => {
@@ -172,20 +155,3 @@ const handleMoveShip = (e) => {
 const handleShootBullet = (e) => {
 	shoot(e, ship, INIT_BOARD_VALUES.tileSize, bulletArray, gameOver);
 };
-
-function createAliens() {
-	for (let c = 0; c < alienColumns; c++) {
-		for (let r = 0; r < alienRows; r++) {
-			let alien = {
-				img: alienImg,
-				x: alienX + c * INIT_ALIEN_VALUES.width,
-				y: alienY + r * INIT_ALIEN_VALUES.height,
-				width: INIT_ALIEN_VALUES.width,
-				height: INIT_ALIEN_VALUES.height,
-				alive: true,
-			};
-			alienArray.push(alien);
-		}
-	}
-	alienCount = alienArray.length;
-}

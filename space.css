@@ -3,6 +3,9 @@
 body {
 	font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
 	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 #board {
@@ -11,4 +14,48 @@ body {
 	background-size: cover; /* <------ */
 	background-repeat: no-repeat;
 	background-position: center center; /* optional, center the image */
+	max-width: 1024px;
+}
+
+.scoreboard {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	border: 2px solid transparent;
+	padding: 10px 10px 5px 10px;
+	background-color: transparent;
+	color: transparent;
+	font-size: 2rem;
+	min-height: 30px;
+	max-width: 1024px;
+}
+
+#score-box {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 1.25rem;
+	color: #c77dff;
+	background: #1a0a2e;
+	padding: 12px 24px;
+	border: 4px solid #6b3fa0;
+	box-shadow:
+		inset 0 0 0 2px #2d1b4e,
+		/* inner border effect */ 0 0 0 2px #4a2c7a; /* outer glow */
+	text-align: center;
+	letter-spacing: 4px;
+	position: relative;
+	top: 75px;
+}
+
+#lives-box {
+	position: absolute;
+	left: 10px;
+	display: flex;
+	align-items: center;
+}
+
+#lives-box img {
+	width: 40px;
+	height: 40px;
+	margin: 0 5px;
 }
