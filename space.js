@@ -118,10 +118,7 @@ function update() {
 		gameState.alienArray = nextWave.alienArray;
 		gameState.alienCount = nextWave.alienCount;
 	}
-
-	gameState.ctx.fillStyle = 'white';
-	gameState.ctx.font = '20px Arial';
-	gameState.ctx.fillText('Score: ' + gameState.score, 10, 30);
+	document.getElementById('score-box').innerText = 'Score: ' + gameState.score;
 }
 
 const handleMoveShip = (e) => {
