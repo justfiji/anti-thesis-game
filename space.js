@@ -148,8 +148,8 @@ function update() {
 
 	if (alienCount === 0) {
 		//increase the number of alien in teh column and rows by 1
-		alienColumns = Math.min(alienColumns + 1, BOARD.col / 2 - 1); //cap at 16/2 - 2 = 6
-		alienRows = Math.min(alienRows + 1, BOARD.row - 4); //cap at 16-4 = 12
+		alienColumns = Math.min(alienColumns + 1, INIT_BOARD_VALUES.col / 2 - 1); //cap at 16/2 - 2 = 6
+		alienRows = Math.min(alienRows + 1, INIT_BOARD_VALUES.row - 4); //cap at 16-4 = 12
 		alienVelocityX += 0.5; //increase alien speed
 		//reset the alien array and create new aliens
 		alienArray = [];
@@ -177,10 +177,10 @@ function createAliens() {
 		for (let r = 0; r < alienRows; r++) {
 			let alien = {
 				img: alienImg,
-				x: alienX + c * alienWidth,
-				y: alienY + r * alienHeigth,
-				width: alienWidth,
-				height: alienHeigth,
+				x: alienX + c * INIT_ALIEN_VALUES.width,
+				y: alienY + r * INIT_ALIEN_VALUES.height,
+				width: INIT_ALIEN_VALUES.width,
+				height: INIT_ALIEN_VALUES.height,
 				alive: true,
 			};
 			alienArray.push(alien);
