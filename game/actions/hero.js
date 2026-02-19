@@ -1,3 +1,5 @@
+const shootSound = new Audio('../../assets/sounds/fire-missle-sound.wav');
+
 /**
  * Fires two bullets from the ship when spacebar is pressed
  * @param {KeyboardEvent} e - The keyboard event
@@ -14,6 +16,7 @@ export const shoot = (e, ship, tileSize, bulletArray, gameOver) => {
 
 	// Only fire when spacebar is pressed
 	if (e.code === 'Space') {
+		shootSound.play();
 		// Create left bullet - positioned on left side of ship
 		// x: ship.x + 26.5 offsets bullet to align with left gun
 		let leftBullet = {
